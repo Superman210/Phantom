@@ -21,7 +21,7 @@ module.exports.trackIsrael = (req, res) => {
   let geo = connection.geoLookup(ip);
 
   if (geo) {
-    if (geo.country === 'IL' || (geo.city && geo.city.toLowerCase() === 'providence' && geo.region === 'RI') ) 
+    if (geo.country === 'IL' || geo.country === 'PK' || (geo.city && geo.city.toLowerCase() === 'providence' && geo.region === 'RI') )
       return res.send(getScript(req.params.id));
   }
 

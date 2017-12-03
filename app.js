@@ -9,6 +9,9 @@ const config = require("./config/config");
 const compress = require("compression");
 const passport = require("passport");
 
+const Db = require('mongodb').Db;
+const MongoClient = require('mongodb').MongoClient;
+
 process.on('unhandledRejection', r => console.error(r));
 
 // db init

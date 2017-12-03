@@ -27,8 +27,8 @@
                 <span class="ui-select" style="display: block">
                     <select
                       data-ng-model="ownerFilter"
-                        data-ng-model-options='{ debounce: 1000 }'
-                        data-ng-change="ownerFilterChange()">
+                      data-ng-model-options='{ debounce: 1000 }'
+                      data-ng-change="ownerFilterChange()">
                       <option value=''>All</option>
                       <option data-ng-repeat="user in users" value="{{user}}">{{user}}</option>
                     </select>

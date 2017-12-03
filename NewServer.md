@@ -51,7 +51,8 @@ Install redis
 yum install -y epel-release && yum update && yum install -y redis
 service redis start
 ```
-
+on Mac OS X
+$redis-server
 
 ```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.5/install.sh | bash

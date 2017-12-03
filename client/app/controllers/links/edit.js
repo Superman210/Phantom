@@ -224,11 +224,35 @@
       $scope.link.enable_at = time.format();
     }
 
+    function submitDisableAt() {
+      let disable_at  = $scope.link.disable_at;
+
+      if (!disable_at || disable_at == -1) {
+        $scope.link.disable_at = null;
+        return;
+      }
+
+      let hour = Math.floor(disable_at);
+
+      let time = moment();
+      time.milliseconds(0);
+      time.seconds(0);
+      time.minutes((disable_at - hour) * 60);
+      time.hours(hour);
+      time.utc();
+
+      if (+time < +moment())
+        time.add(1, 'd');
+
+      $scope.link.disable_at = time.format();
+    }
+
     function submit(ev) {
       if (!Links.isValid($scope.link))
         return Dialog.showAlert(ev, "Voluum and Safe Links are required and must start with http://");
 
       submitEnableAt();
+      submitDisableAt();
 
       Links.newOrUpdate($scope.link, response => {
         if (response.duplicated) {
@@ -243,8 +267,10 @@
     }
 
     function createLinkReset() {
-      let mom = moment($scope.link.enable_at);
-      $scope.link.enable_at = mom.hours() + (mom.minutes() / 60);
+      let mom_enable = moment($scope.link.enable_at);
+      let mom_disable = moment($scope.link.disable_at);
+      $scope.link.enable_at = mom_enable.hours() + (mom_enable.minutes() / 60);
+      $scope.link.disable_at = mom_disable.hours() + (mom_disable.minutes() / 60);
     }
 
     function gotoLinks() {
@@ -255,10 +281,15 @@
       Links.get($stateParams.id, data => {
         var link = data.link;
         let enable_at = -1;
+        let disable_at = -1;
 
         if (link.enable_at) {
           let mom = moment(link.enable_at);
           enable_at = mom.hours() + (mom.minutes() / 60);
+        }
+        if (link.disable_at) {
+          let mom = moment(link.disable_at);
+          disable_at = mom.hours() + (mom.minutes() / 60);
         }
         
         $scope.link = {
@@ -267,6 +298,7 @@
           "cpc":              link.cpc,
           "payout":           link.payout,
           enable_at,
+          disable_at,
           "type":             link.type || "1",
           "link_generated":   link.link_generated || "",
           "link_voluum":      link.link_voluum || "",

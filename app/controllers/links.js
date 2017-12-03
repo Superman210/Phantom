@@ -9,17 +9,22 @@ const Link = mongoose.model("Link");
 const LinkTraffic = mongoose.model("Traffic-Link");
 
 new cron.CronJob({
-  "cronTime": "0,30 * * * *",
+  "cronTime": "0,30 * * * * *",
   "start": true,
   "timeZone": "America/Los_Angeles",
   "onTick": enableLinks,
 });
 
+new cron.CronJob({
+  "cronTime": "0,30 * * * * *",
+  "start": true,
+  "timeZone": "America/Los_Angeles",
+  "onTick": disableLinks,
+});
+
 function enableLinks() {
-  let begin = moment();
-
+  let begin = moment()
   begin.add(5, 'm')
-
   Link.find({
     "enable_at": {
       "$lt": begin.toDate()
@@ -29,7 +34,6 @@ function enableLinks() {
 
     for (let link of links) {
       let enable_at = moment(link.enable_at).add(1, 'd').toDate();
-
       Link.findByIdAndUpdate(link._id, {
         "status": true,
         enable_at
@@ -40,7 +44,28 @@ function enableLinks() {
   });
 }
 
+function disableLinks() {
+  let begin = moment();
+  begin.add(5, 'm')
 
+  Link.find({
+    "disable_at": {
+      "$lt": begin.toDate()
+    }
+  }).exec((err, links) => {
+    if (err) return console.error(err);
+    for (let link of links) {
+      let disable_at = moment(link.disable_at).add(1, 'd').toDate();
+
+      Link.findByIdAndUpdate(link._id, {
+        "status": false,
+        disable_at
+      }, err => {
+        if (err) console.error(err);
+      });
+    }
+  });
+}
 module.exports.getLinks = function(req, res) {
   var { page, pagesize, keyword, sort, ownerFilter, start, end } = req.body;
   var query = {};
@@ -232,8 +257,7 @@ module.exports.deleteLink = function(req, res) {
 module.exports.newOrUpdateLink = function(req, res) {
   var { _id, link_generated, link_voluum, link_safe,
     description, tags, use_ip_blacklist, criteria, criteria_disallow,
-    auto_blacklist_count, network, angle, enable_at, cpc, payout } = req.body;
-
+    auto_blacklist_count, network, angle, enable_at, disable_at, cpc, payout } = req.body;
   const type = req.body.type ? parseInt(req.body.type, 10) : 1;
 
   if (!link_voluum || !link_generated || !link_safe)
@@ -243,6 +267,7 @@ module.exports.newOrUpdateLink = function(req, res) {
     link_generated = "/" + link_generated;
 
   enable_at = enable_at ? moment.utc(enable_at).toDate() : null;
+  disable_at = disable_at ? moment.utc(disable_at).toDate() : null;
   auto_blacklist_count = auto_blacklist_count || 0;
 
   var updated_link = {
@@ -254,6 +279,7 @@ module.exports.newOrUpdateLink = function(req, res) {
     'payout': payout || 0,
     tags,
     enable_at,
+    disable_at,
     "status": false,
     use_ip_blacklist,
     "criteria": helpers.copyLinkRegions(criteria),

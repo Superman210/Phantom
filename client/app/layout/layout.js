@@ -1,10 +1,10 @@
 (function () {
 
   angular.module('app.layout', [])
-        .directive('toggleNavCollapsedMin', ['$rootScope', toggleNavCollapsedMin])
-        .directive('collapseNav', collapseNav)
-        .directive('highlightActive', highlightActive)
-        .directive('toggleOffCanvas', toggleOffCanvas);
+    .directive('toggleNavCollapsedMin', ['$rootScope', toggleNavCollapsedMin])
+    .directive('collapseNav', collapseNav)
+    .directive('highlightActive', highlightActive)
+    .directive('toggleOffCanvas', toggleOffCanvas);
 
   // switch for mini style NAV, realted to 'collapseNav' directive
   function toggleNavCollapsedMin($rootScope) {

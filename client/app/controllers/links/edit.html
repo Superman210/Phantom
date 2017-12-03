@@ -27,12 +27,21 @@
                     </md-select>
                   </md-input-container>
 
-                  <md-input-container style="margin-left: 20px; width: 200px;">
+                  <md-input-container style="margin-left: 20px; width: 200">
                     <label>Enable Time<!-- (EST)--></label>
                     <md-select ng-model="link.enable_at">
                       <md-option ng-repeat="time in times" ng-value="{{time.val}}">{{time.text}}</md-option>
                     </md-select>
                   </md-input-container>
+
+                  <!--11.25 alex added-->
+                  <md-input-container style="margin-left: 20px; width: 200">
+                    <label>Disable Time<!-- (EST)--></label>
+                    <md-select ng-model="link.disable_at">
+                      <md-option ng-repeat="time in times" ng-value="{{time.val}}">{{time.text}}</md-option>
+                    </md-select>
+                  </md-input-container>
+
                 </div>
 
                 <md-select ng-model="link.type" class="md-block" ng-change="typeChange()" style="width: 420px; margin: 20px 0 30px;">

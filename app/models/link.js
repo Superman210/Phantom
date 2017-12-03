@@ -29,6 +29,7 @@ const linkSchema = new mongoose.Schema({
   'network': String,
   'angle': String,
   'enable_at': Date,
+  'disable_at': Date, //11.25 Alex added
   'use_ip_blacklist': Boolean,
   'status': Boolean,
   'criteria': [ {} ],
